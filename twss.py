@@ -34,18 +34,24 @@ classifier = nltk.NaiveBayesClassifier.train(training_feature_set)
 
 print classifier.classify(extract_features("That was not so hard"))
 
+log = open('log.txt', 'a') 
+
 class ServeTWSS(SocketServer.BaseRequestHandler):
     def handle(self):
         self.data = self.request.recv(140)
         print "Got connection from: ", self.client_address[0]
         client_test_statement = self.data
-        print "Got data: ", client_test_statement
+        print "    Got data: ", client_test_statement
+        log.write(self.client_address[0] + ", " + str(datetime.datetime.now()) + ", " + "\"" + client_test_statement + "\"" + ", ")
         if classifier.classify(extract_features(client_test_statement)): 
             self.request.sendall("True")
             print "Classified True\n"
+            log.write("True\n")
         else: 
             self.request.sendall("False")
             print "Classified False\n"
+            log.write("False\n")
+        log.flush()
 
 server = SocketServer.TCPServer(("", PORT), ServeTWSS)
 server.serve_forever()
