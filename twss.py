@@ -1,5 +1,5 @@
 import nltk
-import socket
+import SocketServer
 import sys
 import datetime
 
@@ -34,23 +34,18 @@ classifier = nltk.NaiveBayesClassifier.train(training_feature_set)
 
 print classifier.classify(extract_features("That was not so hard"))
 
-def serve(PORT):
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind(("", PORT))
-    server.listen(5)
-    
-    while True: 
-        client_socket, client_address = server.accept()
-        print "Got connection from ", client_address, "at ", datetime.datetime.now()
-    
-        client_test_statement = client_socket.recv(140)
-        print "Got data: \n", client_test_statement
+class ServeTWSS(SocketServer.BaseRequestHandler):
+    def handle(self):
+        self.data = self.request.recv(140)
+        print "{} wrote:".format(self.client_address[0])
+        print self.data
         if classifier.classify(extract_features(client_test_statement)): 
-            client_socket.send("True")
-            print ("True")
-        else:
-            client_socket.send("False")
-            print ("False")
-        client_socket.close()
+            self.request.sendall("True")
+            print "True"
+        else: 
+            self.request.sendall("False")
+            print "False"
 
-serve(PORT)
+server = SocketServe.TCPServer(("", PORT), ServeTWSS)
+server.serve_forever()
+
