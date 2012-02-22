@@ -37,14 +37,15 @@ print classifier.classify(extract_features("That was not so hard"))
 class ServeTWSS(SocketServer.BaseRequestHandler):
     def handle(self):
         self.data = self.request.recv(140)
-        print "{} wrote:".format(self.client_address[0])
-        print self.data
+        print "Got connection from: ", self.client_address[0]
+        client_test_statement = self.data
+        print "Got data: ", client_test_statement
         if classifier.classify(extract_features(client_test_statement)): 
             self.request.sendall("True")
-            print "True"
+            print "Classified True\n"
         else: 
             self.request.sendall("False")
-            print "False"
+            print "Classified False\n"
 
 server = SocketServer.TCPServer(("", PORT), ServeTWSS)
 server.serve_forever()
