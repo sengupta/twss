@@ -46,6 +46,6 @@ class ServeTWSS(SocketServer.BaseRequestHandler):
             self.request.sendall("False")
             print "False"
 
-server = SocketServe.TCPServer(("", PORT), ServeTWSS)
+server = SocketServer.TCPServer(("", PORT), ServeTWSS)
 server.serve_forever()
 
