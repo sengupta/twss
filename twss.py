@@ -53,6 +53,10 @@ class ServeTWSS(SocketServer.BaseRequestHandler):
             log.write("False\n")
         log.flush()
 
-server = SocketServer.TCPServer(("", PORT), ServeTWSS)
-server.serve_forever()
+def serve():
+    server = SocketServer.TCPServer(("", PORT), ServeTWSS)
+    server.serve_forever()
+
+if __name__ == "__main__": 
+    serve()
 
