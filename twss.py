@@ -3,7 +3,10 @@ import SocketServer
 import sys
 import datetime
 
-PORT = int(sys.argv[1])
+try: 
+    PORT = int(sys.argv[1])
+except (IndexError, NameError): 
+    PORT = 8083
 
 def extract_features(phrase):
     """
@@ -53,10 +56,11 @@ class ServeTWSS(SocketServer.BaseRequestHandler):
             log.write("False\n")
         log.flush()
 
-def serve():
+def serve(PORT):
     server = SocketServer.TCPServer(("", PORT), ServeTWSS)
     server.serve_forever()
 
 if __name__ == "__main__": 
-    serve()
+    print "Serving..."
+    serve(PORT)
 
