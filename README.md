@@ -3,7 +3,7 @@ TWSS
 
 This is an implementation of a simple double entendre classifier in Python. 
 
-This currently uses a Naive Bayes classifier (the NLTK implementation), a simple SocketServer server implementation, so you can fire her up and build your own client to interact with her using basic sockets; and the bvandenbos data corpus. We might build a better API in the future. 
+This currently uses a Naive Bayes classifier (the NLTK implementation), a simple SocketServer server implementation, so you can fire her up and build your own client to interact with her using basic sockets; and the bvandenbos data corpus. We might build a better API in the future. There is a sample PHP client included. 
 
 A live version of this can be found at http://kt4.in/twss
 
