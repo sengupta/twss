@@ -14,8 +14,6 @@ class TextClassifier:
             
         positive_data = open('%s.txt' %(positive_filename))
         negative_data = open('%s.txt' %(negative_filename))
-        #twss_data = open('twss.txt')
-        #non_twss_data = open('non_twss.txt')
 
         for line in positive_data: 
             self.training_data.append((line, True))
