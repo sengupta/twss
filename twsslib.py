@@ -44,6 +44,7 @@ class TextClassifier:
     def is_positive(self, text):
         return self.classifier.classify(self.extract_features(text))
         
-twss = TextClassifier()
 
-print twss.is_positive("That was not so hard")
+if __name__ == '__main__':
+    twss = TextClassifier(positive_filename='twss', negative_filename='non_twss')
+    print twss.is_positive("That was not so hard")
