@@ -2,6 +2,7 @@
 
 import sys
 import nltk
+import pickle
 import datetime
 
 class TextClassifier:
@@ -20,12 +21,7 @@ class TextClassifier:
 
         for line in negative_data: 
             self.training_data.append((line, False))
-
-        training_feature_set = [(self.extract_features(line), label) 
-                                    for (line, label) in self.training_data]
-
-        self.classifier = nltk.NaiveBayesClassifier.train(training_feature_set)
-
+            
 
     def extract_features(self, phrase):
         """
@@ -37,12 +33,31 @@ class TextClassifier:
         features = {}
         for word in words:
             features['contains(%s)' % word] = (word in words)
+        
         return features
 
     def is_positive(self, text):
-        return self.classifier.classify(self.extract_features(text))
+        featureset = self.extract_features(text)
+        return self.classifier.classify(featureset)
         
+    def save(self):
+        ofile = open('classifier.dump','w+')
+        pickle.dump(self.classifier, ofile)
+        ofile.close()
+        
+    def load(self):
+        ifile = open('classifier.dump', 'r+')
+        self.classifier = pickle.load(ifile)
+        ifile.close()
+        
+    def train(self):
+        training_feature_set = [(self.extract_features(line), label) 
+                                    for (line, label) in self.training_data]
+        self.classifier = nltk.NaiveBayesClassifier.train(training_feature_set)
+
+
 
 if __name__ == '__main__':
     twss = TextClassifier(positive_filename='twss', negative_filename='non_twss')
+    twss.train()
     print twss.is_positive("That was not so hard")
