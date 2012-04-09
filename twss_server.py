@@ -1,4 +1,5 @@
 import web
+import json
 import twsslib
         
 urls = (
@@ -6,7 +7,6 @@ urls = (
     '/query/(.*)', 'query',
     '/', 'index',
 )
-
 
 app = web.application(urls, globals())
 twss = twsslib.TextClassifier()
@@ -19,13 +19,10 @@ class query:
 
 class query:
     def GET(self, text):
-        if text.strip() == '':
-            print 'Welcome!'
-        
         try:
-            return twss.is_positive(text)
+            return json.dumps(twss.is_positive(text))
         except:
-            return False
+            return json.dumps(False)
 
 class index:
     def GET(self):
