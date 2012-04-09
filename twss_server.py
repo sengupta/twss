@@ -2,26 +2,36 @@ import web
 import twsslib
         
 urls = (
-    '/blah', 'blah',
-    '/(.*)', 'hello'
+    '/train/(.*)', 'train',
+    '/query/(.*)', 'query',
+    '/', 'index',
 )
 
 
 app = web.application(urls, globals())
+twss = twsslib.TextClassifier()
+twss.train()
 
-class hello:
-    twss = twsslib.TextClassifier()
-    twss.train()
-
-
+class query:
     def GET(self, text):
-        return self.twss.is_positive(text)
+        return 'Not implemented yet.'
 
-class blah:
+
+class query:
+    def GET(self, text):
+        if text.strip() == '':
+            print 'Welcome!'
+        
+        try:
+            return twss.is_positive(text)
+        except:
+            return False
+
+class index:
     def GET(self):
-        return 'hello'
+        return 'Welcome!'
 
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run()
