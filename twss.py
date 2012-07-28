@@ -2,40 +2,16 @@ import nltk
 import SocketServer
 import sys
 import datetime
+import twsslib
 
 try: 
     PORT = int(sys.argv[1])
 except (IndexError, NameError): 
     PORT = 8083
 
-def extract_features(phrase):
-    """
-    This function will extract features from the phrase being used. 
-    Currently, the feature we are extracting are unigrams of the text corpus.
-    """
-    
-    words = nltk.word_tokenize(phrase)
-    features = {}
-    for word in words:
-        features['contains(%s)' % word] = (word in words)
-    return features
+classifier = twsslib.default_classifier()
 
-twss_data = open('data/twss.txt')
-non_twss_data = open('data/non_twss.txt')
-
-training_data = []
-
-for line in twss_data: 
-    training_data.append((line, True))
-
-for line in non_twss_data: 
-    training_data.append((line, False))
-
-training_feature_set = [(extract_features(line), label) for (line, label) in training_data]
-
-classifier = nltk.NaiveBayesClassifier.train(training_feature_set)
-
-print classifier.classify(extract_features("That was not so hard"))
+print classifier.is_positive("That was not so hard")
 
 log = open('log.txt', 'a') 
 
@@ -46,7 +22,7 @@ class ServeTWSS(SocketServer.BaseRequestHandler):
         client_test_statement = self.data
         print "    Got data: ", client_test_statement
         log.write(self.client_address[0] + ", " + str(datetime.datetime.now()) + ", " + "\"" + client_test_statement + "\"" + ", ")
-        if classifier.classify(extract_features(client_test_statement)): 
+        if classifier.is_positive(client_test_statement): 
             self.request.sendall("True")
             print "Classified True\n"
             log.write("True\n")
