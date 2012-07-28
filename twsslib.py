@@ -1,10 +1,10 @@
 # twsslib.py
 
+import datetime
+import pickle
 import os
 import sys
 import nltk
-import pickle
-import datetime
 
 class TextClassifier:
     
