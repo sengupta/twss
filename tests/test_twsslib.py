@@ -1,4 +1,5 @@
 import os
+import tempfile
 import unittest
 import twsslib
 
@@ -15,3 +16,17 @@ class TestTextClassifier(unittest.TestCase):
 		
 		result = self.classifier.is_positive('I am a normal sentance')
 		self.assertEquals(False, result)
+	
+	def test_save_and_load(self):
+		temp = tempfile.NamedTemporaryFile(delete=False)
+		temp.close()
+		
+		self.classifier.save(temp.name)
+		classifier = twsslib.TextClassifier.load(temp.name)
+		
+		result = classifier.is_positive('That was not so hard')
+		self.assertEquals(True, result)
+		
+		result = classifier.is_positive('I am a normal sentance')
+		self.assertEquals(False, result)
+		os.unlink(temp.name)
