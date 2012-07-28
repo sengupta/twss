@@ -48,7 +48,8 @@ class TextClassifier:
         ofile = open(filename,'w+')
         pickle.dump(self, ofile)
         ofile.close()
-        
+     
+    @staticmethod     
     def load(filename):
         ifile = open(filename, 'r+')
         twss = pickle.load(ifile)
