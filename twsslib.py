@@ -58,6 +58,6 @@ class TextClassifier:
 
 
 if __name__ == '__main__':
-    twss = TextClassifier(positive_filename='twss', negative_filename='non_twss')
+    twss = TextClassifier(positive_filename='data/twss', negative_filename='data/non_twss')
     twss.train()
     print twss.is_positive("That was not so hard")

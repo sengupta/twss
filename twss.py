@@ -20,8 +20,8 @@ def extract_features(phrase):
         features['contains(%s)' % word] = (word in words)
     return features
 
-twss_data = open('twss.txt')
-non_twss_data = open('non_twss.txt')
+twss_data = open('data/twss.txt')
+non_twss_data = open('data/non_twss.txt')
 
 training_data = []
 
