@@ -44,16 +44,17 @@ class TextClassifier:
         featureset = self._extract_features(text)
         return self.classifier.classify(featureset)
         
-    def save(self):
-        ofile = open('classifier.dump','w+')
-        pickle.dump(self.classifier, ofile)
+    def save(self, filename):
+        ofile = open(filename,'w+')
+        pickle.dump(self, ofile)
         ofile.close()
         
-    def load(self):
-        ifile = open('classifier.dump', 'r+')
-        self.classifier = pickle.load(ifile)
+    def load(filename):
+        ifile = open(filename, 'r+')
+        twss = pickle.load(ifile)
         ifile.close()
-        
+        return twss
+
 if __name__ == '__main__':
     twss = TextClassifier('data/twss.txt', 'data/non_twss.txt')
     print twss.is_positive("That was not so hard")
