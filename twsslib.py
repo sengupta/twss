@@ -9,19 +9,19 @@ class TextClassifier:
     training_data = []
     classifier = None
     
-    def __init__(self, positive_filename='twss', negative_filename=None):
-        if negative_filename is None:
-            negative_filename = 'non_' + positive_filename
+    def __init__(self, positive_filename, negative_filename):
             
-        positive_data = open('%s.txt' %(positive_filename))
-        negative_data = open('%s.txt' %(negative_filename))
+        positive_data = open(positive_filename)
+        negative_data = open(negative_filename)
 
         for line in positive_data: 
             self.training_data.append((line, True))
 
         for line in negative_data: 
             self.training_data.append((line, False))
-            
+
+	positive_data.close()
+	negative_data.close()
 
     def extract_features(self, phrase):
         """
@@ -58,6 +58,6 @@ class TextClassifier:
 
 
 if __name__ == '__main__':
-    twss = TextClassifier(positive_filename='data/twss', negative_filename='data/non_twss')
+    twss = TextClassifier('data/twss.txt', 'data/non_twss.txt')
     twss.train()
     print twss.is_positive("That was not so hard")
