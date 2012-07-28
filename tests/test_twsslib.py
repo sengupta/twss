@@ -30,3 +30,11 @@ class TestTextClassifier(unittest.TestCase):
 		result = classifier.is_positive('I am a normal sentance')
 		self.assertEquals(False, result)
 		os.unlink(temp.name)
+	
+	def test_default_classifier(self):
+		classifier = twsslib.default_classifier()
+		result = classifier.is_positive('That was not so hard')
+		self.assertEquals(True, result)
+		
+		result = classifier.is_positive('I am a normal sentance')
+		self.assertEquals(False, result)
