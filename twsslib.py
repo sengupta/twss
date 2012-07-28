@@ -6,24 +6,28 @@ import pickle
 import datetime
 
 class TextClassifier:
-    training_data = []
-    classifier = None
     
     def __init__(self, positive_filename, negative_filename):
             
         positive_data = open(positive_filename)
         negative_data = open(negative_filename)
 
-        for line in positive_data: 
-            self.training_data.append((line, True))
+	training_feature_set = []
+	
+	for line in positive_data:
+	    features = self._extract_features(line)
+	    training_feature_set.append((features, True))
 
         for line in negative_data: 
-            self.training_data.append((line, False))
+            features = self._extract_features(line)
+            training_feature_set.append((features, False))
+
+	self.classifier = nltk.NaiveBayesClassifier.train(training_feature_set)
 
 	positive_data.close()
 	negative_data.close()
 
-    def extract_features(self, phrase):
+    def _extract_features(self, phrase):
         """
         This function will extract features from the phrase being used. 
         Currently, the feature we are extracting are unigrams of the text corpus.
@@ -37,7 +41,7 @@ class TextClassifier:
         return features
 
     def is_positive(self, text):
-        featureset = self.extract_features(text)
+        featureset = self._extract_features(text)
         return self.classifier.classify(featureset)
         
     def save(self):
@@ -50,14 +54,6 @@ class TextClassifier:
         self.classifier = pickle.load(ifile)
         ifile.close()
         
-    def train(self):
-        training_feature_set = [(self.extract_features(line), label) 
-                                    for (line, label) in self.training_data]
-        self.classifier = nltk.NaiveBayesClassifier.train(training_feature_set)
-
-
-
 if __name__ == '__main__':
     twss = TextClassifier('data/twss.txt', 'data/non_twss.txt')
-    twss.train()
     print twss.is_positive("That was not so hard")
