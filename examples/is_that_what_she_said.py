@@ -1,7 +1,7 @@
 import twss
 
 sentance = "It's too hard"
-print sentance, twss.is_positice(sentance)
+print sentance, twss.is_positive(sentance)
 
-sentance = "I like jam"
+sentance = "London 2012"
 print sentance, twss.is_positive(sentance)
