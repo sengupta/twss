@@ -1,5 +1,3 @@
-# twsslib.py
-
 import datetime
 import pickle
 import os
@@ -8,7 +6,7 @@ import nltk
 
 class TextClassifier:
     
-    __module__ = os.path.splitext(os.path.basename(__file__))[0]
+    __module__ = 'twss.' + os.path.splitext(os.path.basename(__file__))[0]
     
     def __init__(self, positive_filename, negative_filename):
             
@@ -48,19 +46,16 @@ class TextClassifier:
         return self.classifier.classify(featureset)
         
     def save(self, filename):
-        ofile = open(filename,'w+')
+        ofile = open(filename,'wb')
         pickle.dump(self, ofile)
         ofile.close()
      
     @staticmethod     
     def load(filename):
-        ifile = open(filename, 'r+')
+        ifile = open(filename, 'rb')
         twss = pickle.load(ifile)
         ifile.close()
         return twss
-
-def default_classifier():
-	return TextClassifier.load('data/default_TextClassifier.pickle')
 
 if __name__ == '__main__':
     twss = TextClassifier('data/twss.txt', 'data/non_twss.txt')
