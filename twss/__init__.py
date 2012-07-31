@@ -8,3 +8,6 @@ twss = classifier.TextClassifier(positive_filename, negative_filename)
 
 def is_positive(text):
   return twss.is_positive(text)
+
+def how_confident(text):
+  return twss.how_confident(text)
