@@ -44,7 +44,12 @@ class TextClassifier:
     def is_positive(self, text):
         featureset = self._extract_features(text)
         return self.classifier.classify(featureset)
-        
+
+    def how_confident(self, text):
+        featureset = self._extract_features(text)
+        probability = self.classifier.prob_classify(featureset)
+        return probability.prob(True)
+    
     def save(self, filename):
         ofile = open(filename,'wb')
         pickle.dump(self, ofile)

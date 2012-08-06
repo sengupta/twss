@@ -13,6 +13,11 @@ class TestTextClassifier(unittest.TestCase):
 		result = twss.is_positive('I am a normal sentance')
 		self.assertEquals(False, result)
 	
+	def test_how_confident(self):
+		probability = twss.how_confident('That was not so hard')
+		self.assertTrue(probability >=0)
+		self.assertTrue(probability <=1)
+	
 	def test_save_and_load(self):
 		temp = tempfile.NamedTemporaryFile(delete=False)
 		temp.close()
