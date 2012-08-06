@@ -8,8 +8,8 @@ class TextClassifier:
     
     __module__ = 'twss.' + os.path.splitext(os.path.basename(__file__))[0]
     
-    def __init__(self, positive_filename, negative_filename):
-            
+    def __init__(self, positive_filename, negative_filename, threshold = 0.5):
+        self.threshold = threshold
         positive_data = open(positive_filename)
         negative_data = open(negative_filename)
 
@@ -42,8 +42,7 @@ class TextClassifier:
         return features
 
     def is_positive(self, text):
-        featureset = self._extract_features(text)
-        return self.classifier.classify(featureset)
+        return self.how_confident(text) >= self.threshold
 
     def how_confident(self, text):
         featureset = self._extract_features(text)
