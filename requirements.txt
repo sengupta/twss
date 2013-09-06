@@ -1,5 +1,4 @@
 PyYAML==3.10
 distribute==0.6.24
-nltk==2.0.1rc4
-web.py==0.36
+nltk==2.0.1rc1
 wsgiref==0.1.2
