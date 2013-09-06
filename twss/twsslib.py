@@ -16,8 +16,10 @@ class TWSS:
         print self.is_twss(phrase)
 
     def import_training_data(self,
-            positive_corpus_file=os.path.join(os.path.dirname(__file__), "positive.txt"),
-            negative_corpus_file=os.path.join(os.path.dirname(__file__), "negative.txt")
+            positive_corpus_file=os.path.join(os.path.dirname(__file__),
+                "positive.txt"),
+            negative_corpus_file=os.path.join(os.path.dirname(__file__),
+                "negative.txt")
             ):
         """
         This method imports the positive and negative training data from the
@@ -57,15 +59,25 @@ class TWSS:
         return features
 
     def is_twss(self, phrase):
+        """
+        The magic function- this accepts a phrase and tells you if it
+        classifies as an entendre
+        """
         featureset = self.extract_features(phrase)
         return self.classifier.classify(featureset)
 
     def save(self, filename='classifier.dump'):
+        """
+        Pickles the classifier and dumps it into a file
+        """
         ofile = open(filename,'w+')
         pickle.dump(self.classifier, ofile)
         ofile.close()
         
     def load(self, filename='classifier.dump'):
+        """
+        Unpickles the classifier used
+        """
         ifile = open(filename, 'r+')
         self.classifier = pickle.load(ifile)
         ifile.close()
