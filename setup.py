@@ -8,5 +8,8 @@ setup(name='twss',
         author_email='aditya@sengupta.me',
         license='WTFPL',
         packages=['twss',],
+        install_requires=[
+            "nltk==2.0.1rc1",
+            ]
         zip_safe=False,
         )
