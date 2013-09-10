@@ -8,11 +8,17 @@ class TWSS:
     training_data = [] # [("sentence 1", bool), ("sentence 2", bool), ... ]
     classifier = None
 
-    def __init__(self, positive_corpus_file=None, negative_corpus_file=None):
-        if not self.classifier: 
-            self.train()
+    def __init__(self, sentence=None, training_data=None, positive_corpus_file=None, negative_corpus_file=None):
+        if training_data:
+            self.training_data = training_data
+        if positive_corpus_file and negative_corpus_file: 
+            self.import_training_data(positive_corpus_file, negative_corpus_file)
+        if sentence: 
+            self.__call__(sentence)
 
     def __call__(self, phrase):
+        if not self.classifier: 
+            self.train()
         print self.is_twss(phrase)
 
     def import_training_data(self,
@@ -29,11 +35,17 @@ class TWSS:
         positive_corpus = open(positive_corpus_file)
         negative_corpus = open(negative_corpus_file)
 
-        for line in positive_corpus: 
-            self.training_data.append((line, True))
+        # for line in positive_corpus: 
+        #     self.training_data.append((line, True))
 
-        for line in negative_corpus: 
-            self.training_data.append((line, False))
+        # for line in negative_corpus: 
+        #     self.training_data.append((line, False))
+
+        # The following code works. Need to profile this to see if this is an
+        # improvement over the code above. 
+        positive_training_data = map(lambda x: (x, True), positive_corpus)
+        negative_training_data = map(lambda x: (x, False), negative_corpus)
+        self.training_data = positive_training_data + negative_training_data
 
     def train(self): 
         """
