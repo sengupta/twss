@@ -4,8 +4,8 @@ TWSS
 This is an implementation of a simple double entendre classifier in Python. 
 
 This currently uses a Naive Bayes classifier (the NLTK implementation) as a
-Python package. This was inspired by the @bvandenvos Ruby TWSS project and uses
-the same data corpus. 
+Python package. This was inspired by the `bvandenvos Ruby TWSS project
+<https://github.com/bvandenbos/twss/>`_ and uses the same data corpus. 
 
 This was built on the eve of `Barcamp Mumbai <http://barcampmumbai.org/>`_ 8
 and presented during a session there. 
@@ -26,7 +26,7 @@ packages necessary for the project to work.
 Demo
 ----
 
-Once this is installed, you can take it out for a spin thus: 
+Once this is installed, you can take it out for a spin: 
 
 .. code-block:: python 
 
@@ -47,7 +47,7 @@ You can supply your own training data using positive and negative corpus files:
 
 .. code-block:: python 
 
-    >>> twss = TWSS(positive_corpus_file=open('foo.txt'), negative_corpus_file=open('bar.txt')
+    >>> twss = TWSS(positive_corpus_file=open('foo.txt'), negative_corpus_file=open('bar.txt'))
 
 or directly, as a list of tuples: 
 
