@@ -1,4 +1,4 @@
 PyYAML==3.10
-distribute==0.6.24
-nltk==2.0.1rc1
+distribute==0.6.28
+nltk==2.0.4
 wsgiref==0.1.2
