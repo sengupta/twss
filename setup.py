@@ -10,6 +10,7 @@ setup(name='twss',
         packages=['twss',],
         install_requires=[
             "nltk==2.0.1rc1",
+            "PyYAML==3.10",
             ],
         zip_safe=False,
         )
