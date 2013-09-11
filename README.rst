@@ -16,6 +16,7 @@ Setup Instructions
 ------------------
 
 .. code-block:: bash
+
     $ virtualenv --no-site-packages --distribute venv 
     $ source venv/bin/activate 
     $ pip install -r requirements.txt
@@ -64,6 +65,6 @@ Roadmap
 -------
 
 - Making this pip-installable.
-- Writing a sample web app. 
-- Writing a sample Twitter client. 
+- Writing a sample web app.
+- Writing a sample Twitter client.
 
