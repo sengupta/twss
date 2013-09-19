@@ -1,7 +1,7 @@
 from setuptools import setup 
 
 setup(name='twss',
-        version='0.1.7',
+        version='0.1.8',
         description='TWSS: A Naive Bayes classifier that can identify double entendres.',
         long_description=open('README.rst').read(),
         url='https://github.com/sengupta/twss',
