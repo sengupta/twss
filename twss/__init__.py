@@ -1,1 +1,1 @@
-from twsslib import TWSS
+from .twsslib import TWSS

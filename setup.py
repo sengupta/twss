@@ -12,7 +12,7 @@ setup(name='twss',
         package_dir={'twss': 'twss'},
         package_data={'twss': ['*.txt']},
         install_requires=[
-            "nltk==2.0.4",
+            "nltk>=2.0.4",
             ],
         zip_safe=False,
         )
