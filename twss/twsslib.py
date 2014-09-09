@@ -19,7 +19,7 @@ class TWSS:
     def __call__(self, phrase):
         if not self.classifier: 
             self.train()
-        print self.is_twss(phrase)
+        print(self.is_twss(phrase))
 
     def import_training_data(self,
             positive_corpus_file=os.path.join(os.path.dirname(__file__),
@@ -43,8 +43,8 @@ class TWSS:
 
         # The following code works. Need to profile this to see if this is an
         # improvement over the code above. 
-        positive_training_data = map(lambda x: (x, True), positive_corpus)
-        negative_training_data = map(lambda x: (x, False), negative_corpus)
+        positive_training_data = list(map(lambda x: (x, True), positive_corpus))
+        negative_training_data = list(map(lambda x: (x, False), negative_corpus))
         self.training_data = positive_training_data + negative_training_data
 
     def train(self): 
