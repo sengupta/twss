@@ -1,72 +1,84 @@
+import io
 import os
-import sys
-import nltk
 import pickle
-import datetime
+import nltk
+import sys
 
-class TWSS: 
-    training_data = [] # [("sentence 1", bool), ("sentence 2", bool), ... ]
+
+class TWSS(object):
+    training_data = []  # [("sentence 1", bool), ("sentence 2", bool), ... ]
     classifier = None
 
-    def __init__(self, sentence=None, training_data=None, positive_corpus_file=None, negative_corpus_file=None):
-        if training_data:
+    def __init__(self, sentence=None, training_data=None,
+                 positive_corpus_file=None, negative_corpus_file=None):
+        if training_data is not None:
             self.training_data = training_data
-        if positive_corpus_file and negative_corpus_file: 
-            self.import_training_data(positive_corpus_file, negative_corpus_file)
-        if sentence: 
-            self.__call__(sentence)
+        if positive_corpus_file is not None and \
+           negative_corpus_file is not None:
+            self.import_training_data(positive_corpus_file,
+                                      negative_corpus_file)
+        if sentence is not None:
+            self(sentence)  # Don't call __call__ on instance.
 
     def __call__(self, phrase):
-        if not self.classifier: 
+        if not self.classifier:
             self.train()
-        print(self.is_twss(phrase))
+        return self.is_twss(phrase)
 
-    def import_training_data(self,
-            positive_corpus_file=os.path.join(os.path.dirname(__file__),
-                "positive.txt"),
-            negative_corpus_file=os.path.join(os.path.dirname(__file__),
-                "negative.txt")
-            ):
+    def import_training_data(self, positive_corpus_file=None,
+                             negative_corpus_file=None):
         """
         This method imports the positive and negative training data from the
-        two corpus files and creates the training data list. 
+        two corpus files and creates the training data list.
         """
 
-        positive_corpus = open(positive_corpus_file)
-        negative_corpus = open(negative_corpus_file)
+        if positive_corpus_file is None:
+            positive_corpus_file = os.path.join(os.path.dirname(__file__),
+                                                "positive.txt")
+        if negative_corpus_file is None:
+            negative_corpus_file = os.path.join(os.path.dirname(__file__),
+                                                "negative.txt")
 
-        # for line in positive_corpus: 
-        #     self.training_data.append((line, True))
+        # map() with lambda is very unpythonic and slow. Some other
+        # alternatives are:-
+        # 1. Two list-comprhensions(LC).
+        # 2. One LC followed by a extend.
+        # 3. One LC followed by append calls(save .append in a local variable)
+        # 4. Two generator expressions chained using itertools.chain().
+        # Out of these the append one outperforms the extend one by a slight
+        # margin for bigger data set, so that's the one I used here.
 
-        # for line in negative_corpus: 
-        #     self.training_data.append((line, False))
+        # Nested with-statements to support Python 2.6 as well.
+        with io.open(positive_corpus_file, 'rt') as positive_corpus:
+            with io.open(negative_corpus_file, 'rt') as negative_corpus:
+                self.training_data = [(x, True) for x in positive_corpus]
+                training_data_append = self.training_data.append
+                for x in negative_corpus:
+                    training_data_append((x, False))
 
-        # The following code works. Need to profile this to see if this is an
-        # improvement over the code above. 
-        positive_training_data = list(map(lambda x: (x, True), positive_corpus))
-        negative_training_data = list(map(lambda x: (x, False), negative_corpus))
-        self.training_data = positive_training_data + negative_training_data
-
-    def train(self): 
+    def train(self):
         """
         This method generates the classifier. This method assumes that the
         training data has been loaded
         """
-        if not self.training_data: 
+        if not self.training_data:
             self.import_training_data()
-        training_feature_set = [(self.extract_features(line), label) 
-                                    for (line, label) in self.training_data]
+
+        extract_features = self.extract_features  # prevent unnecessary lookups
+        training_feature_set = [(extract_features(line), label)
+                                for (line, label) in self.training_data]
         self.classifier = nltk.NaiveBayesClassifier.train(training_feature_set)
 
     def extract_features(self, phrase):
         """
-        This function will extract features from the phrase being used. 
-        Currently, the feature we are extracting are unigrams of the text corpus.
+        This function will extract features from the phrase being used.
+        Currently, the feature we are extracting are unigrams of the text
+        corpus.
         """
-        
         words = nltk.word_tokenize(phrase)
         features = {}
         for word in words:
+            # Why not simply set it to True?
             features['contains(%s)' % word] = (word in words)
         return features
 
@@ -78,19 +90,22 @@ class TWSS:
         featureset = self.extract_features(phrase)
         return self.classifier.classify(featureset)
 
-    def save(self, filename='classifier.dump'):
+    def save(self, filename=None):
         """
         Pickles the classifier and dumps it into a file
         """
-        ofile = open(filename,'w+')
-        pickle.dump(self.classifier, ofile)
-        ofile.close()
-        
-    def load(self, filename='classifier.dump'):
+        if filename is None:
+            filename = 'classifier.dump'
+
+        with open(filename, 'wt+') as ofile:
+            pickle.dump(self.classifier, ofile)
+
+    def load(self, filename=None):
         """
         Unpickles the classifier used
         """
-        ifile = open(filename, 'r+')
-        self.classifier = pickle.load(ifile)
-        ifile.close()
+        if filename is None:
+            filename = 'classifier.dump'
 
+        with io.open(filename, 'rt+') as ifile:
+            self.classifier = pickle.load(ifile)
